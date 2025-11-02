@@ -74,7 +74,7 @@ pub fn build(b: *std.Build) void {
     api_mod.addImport("tbl2", tbl2_mod);
     api_mod.addImport("registry", registry_mod);
 
-    // root
+    // root (internal)
     root_mod.addImport("errors", errors_mod);
     root_mod.addImport("bitset", bitset_mod);
     root_mod.addImport("container", container_mod);
@@ -101,6 +101,22 @@ pub fn build(b: *std.Build) void {
     registry_mod.addImport("container", container_mod);
     registry_mod.addImport("tbl1", tbl1_mod);
     registry_mod.addImport("tbl2", tbl2_mod);
+
+    // ---- PUBLIC MODULE EXPORT (needed by dependents like ZTable) ------------
+    // This registers a dependency-visible module named "zsnapshot".
+    const zsnapshot_pub = b.addModule("zsnapshot", .{
+        .root_source_file = b.path("src/root.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    zsnapshot_pub.addOptions("build_options", build_opts);
+    zsnapshot_pub.addImport("errors", errors_mod);
+    zsnapshot_pub.addImport("bitset", bitset_mod);
+    zsnapshot_pub.addImport("container", container_mod);
+    zsnapshot_pub.addImport("tbl1", tbl1_mod);
+    zsnapshot_pub.addImport("tbl2", tbl2_mod);
+    zsnapshot_pub.addImport("registry", registry_mod);
+    zsnapshot_pub.addImport("api", api_mod);
 
     // ---- Installable static lib ---------------------------------------------
     const lib = b.addLibrary(.{
