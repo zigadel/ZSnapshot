@@ -1,0 +1,16 @@
+.DS_Store
+
+.dpignore
+.env
+project_dump.txt
+zsnapshot-project_dump.txt
+ideal-project-directory-structure.txt
+
+.zig-cache/
+.zig-cache
+zig-out/
+zig-out
+out
+out/
+
+node_modules/
